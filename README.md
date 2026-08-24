@@ -72,6 +72,18 @@ upset.min_size = 3          # hide the long tail of singletons
 upset.max_degree = 2        # only single sets and pairs
 ```
 
+## Examples
+
+Both demos build the same plot from the same 156-film dataset.
+
+```sh
+# marimo — reactive: clicking a bar re-runs the cells below it
+uv run --group dev marimo edit examples/marimo_demo.py
+
+# Jupyter — re-run the reading cell yourself after clicking
+uv run --group jupyter jupyter lab examples/jupyter_demo.ipynb
+```
+
 ## Notes
 
 `max_examples` (default 200) caps how many members of each intersection are
