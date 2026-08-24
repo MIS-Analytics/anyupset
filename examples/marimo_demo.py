@@ -28,8 +28,6 @@ def _():
 
 @app.cell(hide_code=True)
 def _():
-    import random
-
     MOVIES = [
         ("Alien", ["sci-fi", "horror", "thriller"]),
         ("Aliens", ["sci-fi", "action", "horror"]),
@@ -187,8 +185,6 @@ def _():
         ("Logan", ["action", "drama", "sci-fi"]),
         ("Everything Everywhere", ["sci-fi", "comedy", "action", "drama"]),
         ("The Truman Show", ["drama", "comedy", "sci-fi"]),
-    # ] + [
-    #     ( "".join( [random.choice("abc") for i in range(15)] ), random.sample(["action", "drama", "sci-fi"], 2) ) for _ in range(1_000) 
     ]
     return (MOVIES,)
 
