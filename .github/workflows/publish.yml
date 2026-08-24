@@ -1,0 +1,34 @@
+name: Publish
+
+# Publishes to PyPI when a GitHub release is published. Authentication uses
+# PyPI Trusted Publishing (OIDC), so there is no API token to store: register
+# this repo, workflow file and environment as a trusted publisher on PyPI first.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # required to mint the OIDC token
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - name: Fail if the tag and the packaged version disagree
+        if: github.event_name == 'release'
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(uv run --group dev python -c 'import anyupset; print(anyupset.__version__)')"
+          echo "tag=$tag packaged=$pkg"
+          [ "$tag" = "$pkg" ] || { echo "::error::tag $tag != version $pkg"; exit 1; }
+
+      - run: uv build
+
+      - run: uv publish --trusted-publishing always

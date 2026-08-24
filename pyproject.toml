@@ -1,0 +1,57 @@
+[project]
+name = "anyupset"
+version = "0.1.0"
+description = "Interactive UpSet plots for marimo and Jupyter, with a live examples panel"
+readme = "README.md"
+authors = [
+    { name = "Jonas Jakubassa", email = "jjakubassa@mis-analytics.de" }
+]
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+keywords = ["upset", "upsetplot", "anywidget", "marimo", "jupyter", "sets", "intersection", "visualization"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Framework :: Jupyter",
+    "Framework :: Jupyter :: JupyterLab",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Typing :: Typed",
+]
+dependencies = [
+    "anywidget>=0.9",
+    "traitlets>=5",
+]
+
+[project.urls]
+Homepage = "https://github.com/MIS-Analytics/anyupset"
+Repository = "https://github.com/MIS-Analytics/anyupset"
+Issues = "https://github.com/MIS-Analytics/anyupset/issues"
+
+[dependency-groups]
+dev = [
+    "marimo>=0.24",
+    "polars>=1",
+    "pytest>=8",
+]
+# For examples/demo.ipynb — kept out of `dev` so CI does not install JupyterLab.
+jupyter = [
+    "jupyterlab>=4",
+    "ipywidgets>=8",
+    "polars>=1",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.0,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.marimo.runtime]
+# Editing src/anyupset/ re-runs the cells that import it, so the notebook
+# tracks the package without a kernel restart.
+auto_reload = "autorun"

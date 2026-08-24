@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - name: Run the test suite
+        run: uv run --group dev --python ${{ matrix.python-version }} pytest -q
+
+  build:
+    name: build and inspect the wheel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - run: uv build
+
+      - name: Validate the package metadata
+        run: uvx twine check --strict dist/*
+
+      # The JS, CSS and py.typed are data files. Nothing in the test suite
+      # notices if they stop being packaged, because tests run against the
+      # source tree — so check the built wheel itself.
+      - name: Verify the wheel ships its data files
+        run: |
+          uv run --isolated --no-project --with "$(ls dist/*.whl)" python - <<'PY'
+          import pathlib
+          import anyupset
+          from anyupset import UpSet
+
+          pkg = pathlib.Path(anyupset.__file__).parent
+          for rel in ("py.typed", "static/upset.js", "static/upset.css"):
+              assert (pkg / rel).exists(), f"{rel} is missing from the wheel"
+
+          widget = UpSet({"a": {1, 2}, "b": {2}})
+          assert "export default { render }" in widget._esm
+          assert ".upset-root" in widget._css
+          widget.select("a", "b")
+          assert widget.selected_members == [2]
+          print("wheel contents OK")
+          PY
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
