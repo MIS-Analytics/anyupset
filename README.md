@@ -8,6 +8,17 @@ The point of this one is **seeing the actual items**: hover any bar and its
 members appear in the side panel; click to pin the selection and pull it back
 into Python.
 
+> [!WARNING]
+> **Early days.** This is a `0.1` release. The API may still change, and the
+> widget has seen little use beyond its own test suite and demos — pin an exact
+> version if you build on it, and please report anything that breaks.
+>
+> **Written with AI assistance.** Nearly all of this project — the widget, the
+> tests, the demos and the CI — was written by Claude in a pair-programming
+> session, then reviewed and directed by a human. It is tested, but it has not
+> had the scrutiny of a codebase grown by hand over time. Read the source
+> before you depend on it.
+
 ## Install
 
 ```sh
@@ -51,27 +62,6 @@ synced — it holds the original objects, uncapped, and never crosses the wire �
 but the wrapper proxies attribute access, so `upset.selected_members` still
 works. Use `.value` for reactivity, the attribute when you need fidelity.
 
-### Without clicking
-
-```python
-upset.sets                          # ['drama', 'romance', 'comedy']
-upset.members("drama", "romance")   # ['Casablanca', 'Titanic']
-upset.intersections                 # every non-empty combination, largest first
-upset.select("drama", "romance")    # pin it, as a click would
-upset.select()                      # clear
-```
-
-### Controls
-
-`sort_by` (`"size"` / `"degree"`), `min_size`, `max_degree`, and
-`max_intersections` are synced traitlets — settable from the toolbar or from
-Python, and they stay in step either way.
-
-```python
-upset.min_size = 3          # hide the long tail of singletons
-upset.max_degree = 2        # only single sets and pairs
-```
-
 ## Examples
 
 Both demos build the same plot from the same 156-film dataset.
@@ -83,9 +73,3 @@ uv run --group dev marimo edit examples/marimo_demo.py
 # Jupyter — re-run the reading cell yourself after clicking
 uv run --group jupyter jupyter lab examples/jupyter_demo.ipynb
 ```
-
-## Notes
-
-`max_examples` (default 200) caps how many members of each intersection are
-sent to the browser for the panel. `selected_members` is always complete — it
-is deliberately not synced, so a large intersection never crosses the wire.
