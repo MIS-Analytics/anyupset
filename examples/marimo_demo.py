@@ -1,3 +1,16 @@
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "anyupset",
+#     "polars",
+# ]
+# ///
+#
+# The header is what lets this notebook run in the browser: `marimo export
+# html-wasm` hands these to micropip, which installs them into Pyodide. marimo
+# itself is already there, so it is not listed. Locally the header is inert —
+# `uv run marimo edit` uses the project environment.
+
 import marimo
 
 __generated_with = "0.24.0"

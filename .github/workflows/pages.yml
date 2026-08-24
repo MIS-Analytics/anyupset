@@ -1,0 +1,52 @@
+name: Deploy demo to Pages
+
+# Publishes examples/marimo_demo.py as a WebAssembly notebook, so the demo is
+# playable in the browser with no install. anyupset is resolved from PyPI by
+# micropip at page load, so a new release shows up without rebuilding — use the
+# manual trigger if you want to force it.
+on:
+  push:
+    branches: [main]
+    paths:
+      - examples/marimo_demo.py
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+
+      # --mode run gives a clean read-only app; --mode edit would let visitors
+      # change the code, and --show-code reveals it without making it editable.
+      - name: Export the notebook to WebAssembly
+        run: uv run --group dev marimo export html-wasm examples/marimo_demo.py -o _site --mode run
+
+      - name: Check the export produced a site
+        run: test -f _site/index.html && du -sh _site
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

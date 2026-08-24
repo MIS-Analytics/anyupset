@@ -20,3 +20,6 @@ uv.lock
 
 # pytest
 .pytest_cache/
+
+# marimo WASM export (built in CI)
+_site/

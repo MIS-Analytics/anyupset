@@ -10,6 +10,9 @@ into Python.
 
 ![anyupset in action](https://raw.githubusercontent.com/MIS-Analytics/anyupset/main/docs/demo.gif)
 
+**[Try it in your browser →](https://mis-analytics.github.io/anyupset/)** —
+a live notebook running on WebAssembly, nothing to install.
+
 > [!WARNING]
 > **Early days.** This is a `0.1` release. The API may still change, and the
 > widget has seen little use beyond its own test suite and demos — pin an exact
