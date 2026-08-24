@@ -31,4 +31,7 @@ jobs:
 
       - run: uv build
 
-      - run: uv publish --trusted-publishing always
+      # --check-url makes a re-run skip files already on PyPI, so a job that
+      # fails partway (say the wheel lands but the sdist does not) can simply
+      # be re-run instead of erroring on a duplicate upload.
+      - run: uv publish --trusted-publishing always --check-url https://pypi.org/simple/
