@@ -8,6 +8,8 @@ The point of this one is **seeing the actual items**: hover any bar and its
 members appear in the side panel; click to pin the selection and pull it back
 into Python.
 
+![anyupset in action](https://raw.githubusercontent.com/MIS-Analytics/anyupset/main/docs/demo.gif)
+
 > [!WARNING]
 > **Early days.** This is a `0.1` release. The API may still change, and the
 > widget has seen little use beyond its own test suite and demos — pin an exact
@@ -40,6 +42,18 @@ upset
 
 Columns are *exclusive* intersections: each item belongs to exactly one
 column, the one matching the full set of sets it is in.
+
+Data often arrives the other way round — one row per item, listing what it
+belongs to. `from_memberships` flips it for you, and builds the same plot:
+
+```python
+upset = UpSet.from_memberships({
+    "Titanic":      ["drama", "romance"],
+    "Casablanca":   ["drama", "romance"],
+    "Whiplash":     ["drama"],
+    "Notting Hill": ["romance", "comedy"],
+})
+```
 
 ### Reading the selection
 

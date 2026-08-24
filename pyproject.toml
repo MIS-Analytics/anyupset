@@ -36,6 +36,7 @@ dev = [
     "marimo>=0.24",
     "polars>=1",
     "pytest>=8",
+    "pillow>=10",  # scripts/make_demo_gif.py
 ]
 # For examples/demo.ipynb — kept out of `dev` so CI does not install JupyterLab.
 jupyter = [
